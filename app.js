@@ -1,7 +1,6 @@
 var restify = require('restify');
 var builder = require('botbuilder');
 var luis = require('./controller/LuisDialog');
-// Some sections have been omitted
 
 // Setup Restify Server
 var server = restify.createServer();

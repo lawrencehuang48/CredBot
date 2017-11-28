@@ -1,6 +1,6 @@
 var builder = require('botbuilder');
 var bank = require('./Functions');
-
+var customVision = require('./CustomVision');
 
 
 exports.startDialog = function (bot) {
@@ -117,3 +117,15 @@ exports.startDialog = function (bot) {
     
 }
 
+function isAttachment(session) { 
+    var msg = session.message.text;
+    if (msg.includes("http")) {
+        //call custom vision
+        customVision.retreiveMessageHttps(session);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
