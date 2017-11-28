@@ -1,5 +1,6 @@
 {
   "name": "git",
+  "engines" : { "node" : ">=0.12" },
   "version": "1.0.0",
   "description": "chatbot",
   "main": "index.js",
@@ -12,4 +13,5 @@
     "botbuilder": "^3.12.0",
     "restify": "^6.3.4"
   }
+ 
 }
