@@ -45,6 +45,44 @@ exports.startDialog = function (bot) {
         matches: 'WelcomeIntent'
     });
 
+    bot.dialog('AddCard', [
+        function (session, args, next) {
+            if (!isAttachment(session)) {
+                session.dialogData.args = args || {};        
+                if (!session.conversationData["username"]) { //Check if conversation has username
+                    builder.Prompts.text(session, "Please enter your ***username*** to confirm that you want to add a new payment card to your account.");                
+                } else {
+                    next(); // Skip if we already have this info.
+                }
+            }
+        },
+        function (session, results, next) {
+            if (!isAttachment(session)) {
+    
+                    if (results.response) {
+                        session.conversationData["username"] = results.response;
+                    }
+                    // Pulls out the card entity from the session if it exists
+                    var cardEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'card');
+                    var linkEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'link');
+        
+                    // Checks if the card entity was found
+                    if (cardEntity && linkEntity) {
+                        session.send('A new ***\%s\*** card has been opened for your ***\%s\*** account.', cardEntity.entity, linkEntity.entity);
+                        bank.sendCard(session, session.conversationData["username"], cardEntity.entity, linkEntity.entity); 
+        
+                    } else {
+                        session.send("No such card identified!");
+                    }
+                }
+            }
+      
+    ]).triggerAction({
+        matches: 'AddCard'
+    });
+
+
+
     
 }
 

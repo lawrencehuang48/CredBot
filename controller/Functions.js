@@ -5,7 +5,10 @@ exports.displayBalance = function getBalance(session, username){
     rest.getBalance(url, session, username, handleDisplayFundsResponse)
 };
 
-
+exports.sendCard = function addCardToAccount(session, username, cardtype, linkedto){ 
+    var url = 'https://CredBot.azurewebsites.net/tables/CredBot';
+    rest.addCardToAccount(url, username, cardtype, linkedto)
+};
 
 function handleDisplayFundsResponse(message, session, username) {
     var table = JSON.parse(message);
@@ -33,6 +36,5 @@ function handleDisplayFundsResponse(message, session, username) {
     session.send("%s, your account balance is: <br/> %s", username, output,);             
     
 }
-
 
 
