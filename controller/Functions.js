@@ -37,4 +37,33 @@ function handleDisplayFundsResponse(message, session, username) {
     
 }
 
+exports.deleteCard = function deleteCard(session,username, cardtype){ 
+    var url  = 'https://CredBot.azurewebsites.net/tables/CredBot';
+
+
+    rest.getBalance(url,session, username,function(message,session,username){ //Callback function
+     var   allAccounts = JSON.parse(message); //Parse result as JSON
+
+        for(var i in allAccounts) { //Iterate through columns in easy table
+
+            //Check if card type and username match
+            if (allAccounts[i].cardtype === cardtype && allAccounts[i].username === username) {
+
+                console.log(allAccounts[i]);
+                
+                //Delete the card
+                rest.deleteCard(url,session,username,cardtype, allAccounts[i].id ,handleDeletedCard)
+
+            }
+        }
+
+
+    });
+
+
+};
+
+function handleDeletedCard(body,session,username,cardtype){
+    console.log('Done');
+}
 

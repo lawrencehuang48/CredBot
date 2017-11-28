@@ -82,7 +82,38 @@ exports.startDialog = function (bot) {
     });
 
 
+    bot.dialog('CancelCard', [
+        function (session, args, next) {
+            session.dialogData.args = args || {};
+            if (!session.conversationData["username"]) {
+                session.send("Please note that once you have cancelled a payment card you ***cannot undo*** this action so be ***sure*** that this is your desired action")
+                builder.Prompts.text(session, "Please enter your ***username*** to confirm that you want to ***cancel*** this particular card");
+            } else {
+                next(); // Skip if we already have this info.
+            }
+        },
+        function (session, results,next) {
+        if (!isAttachment(session)) {    
+            if (results.response) {
+                session.conversationData["username"] = results.response;
+            }
 
+            session.send("Cancelling card..");
+
+            // Pulls out the Card entity from the session if it exists
+            var cardEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'card');
+
+            // Checks if the for entity was found
+            if (cardEntity) {
+                session.send('Your ***\%s\*** has been succesfully ***canceled***.', cardEntity.entity);
+                bank.deleteCard(session,session.conversationData['username'],cardEntity.entity); 
+            } else {
+                session.send("Oops looks like no such card exists on your account! Please make sure that you have typed in your card correctly!");
+            }
+        }
+    }]).triggerAction({
+        matches: 'CancelCard'
+    });
     
 }
 

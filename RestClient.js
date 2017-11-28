@@ -36,6 +36,26 @@ exports.addCardToAccount = function getData(url, username, cardtype, linkedto){ 
       });
 };
 
+exports.deleteCard = function deleteData(url,session, username , cardtype, id, callback){ 
+    var options = {
+        url: url + "\\" + id, //id tells function what to delete "\\" is syntax for escape sequence
+        method: 'DELETE',
+        headers: {
+            'ZUMO-API-VERSION': '2.0.0',
+            'Content-Type':'application/json'
+        }
+    };
 
+    request(options,function (err, res, body){ //blue function is callback function 
+        if( !err && res.statusCode === 200){ //if ok log the body
+            console.log(body);
+            callback(body,session,username, cardtype);
+        } else {                 //else log error to debug
+            console.log(err); 
+            console.log(res);
+        }
+    })
+
+};
 
 
