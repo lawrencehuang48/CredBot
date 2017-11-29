@@ -82,6 +82,8 @@ exports.startDialog = function (bot) {
         
                     // Checks if the card entity was found
                     if (cardEntity && linkEntity) {
+                        session.send("Adding card to account...");
+                        session.send("All done!"); 
                         session.send('A new ***\%s\*** card has been opened for your ***\%s\*** account.', cardEntity.entity, linkEntity.entity);
                         bank.sendCard(session, session.conversationData["username"], cardEntity.entity, linkEntity.entity); 
         
@@ -108,7 +110,8 @@ exports.startDialog = function (bot) {
 
         function(session, next){
             if (!session.conversationData["yes" || "no"]) {
-                builder.Prompts.confirm(session, "Are you sure you wish to cancel your card?");
+                session.send("***WARNING*** This action ***CANNOT*** be undone once issued so be sure that this is what you want!");
+                builder.Prompts.confirm(session, "Are you sure you wish to cancel your card? Type 'Yes' to continue.");
             } else {
                 next();
             }
