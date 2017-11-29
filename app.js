@@ -24,4 +24,6 @@ var bot = new builder.UniversalBot(connector, function (session) {
 
 // This line will call the function in your LuisDialog.js file
 luis.startDialog(bot);
+
+//test
  
