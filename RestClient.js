@@ -58,11 +58,12 @@ exports.deleteCard = function deleteData(url,session, username , cardtype, id, c
 
 };
 
-exports.convertCurrency = function getData(url,session,callback){
+exports.getXRate = function getData(url,session,currencyType,callback){
 
     request.get(url, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            console.log(body);
+        if (!error) {
+            callback(body,currencyType,session);
+            // ----> Remember to change console.log(body);
         } else {
             console.log(error)
         }

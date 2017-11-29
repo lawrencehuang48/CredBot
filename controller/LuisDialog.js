@@ -1,6 +1,7 @@
 var builder = require('botbuilder');
 var bank = require('./Functions');
 var customVision = require('./CustomVision');
+var XRate = require('./XRate');
 
 
 exports.startDialog = function (bot) {
@@ -148,6 +149,28 @@ exports.startDialog = function (bot) {
         }
     ]).triggerAction({
         matches: 'CancelCard'
+    });
+
+    bot.dialog('GetRate', function (session, args) {
+            
+        if (!isAttachment(session)) {
+                
+            // Pulls out the rate entity from the session if it exists
+            var rateEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'rate');
+                
+            // Checks if the rate entity was found
+            
+            if (rateEntity) {
+                session.send('Getting exchange rates for %s...', rateEntity.entity);
+                XRate.displayXRate(rateEntity.entity, session);
+                
+            } else {
+                session.send("Can't identify rate! Please try again");
+            }
+        }
+        
+    }).triggerAction({
+        matches: 'GetRate'
     });
     
 }
