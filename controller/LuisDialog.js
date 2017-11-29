@@ -35,9 +35,23 @@ exports.startDialog = function (bot) {
     });
 
     bot.dialog('WelcomeIntent', [
-        function(session){
+        function(session, next){
             session.send("Welcome to Credbot!")
             session.send("The purpose of this bot is to help you manage your bank related activities remotely, swiftly, and efficiently.")
+            if (!session.conversationData["username"]) {
+                builder.Prompts.text(session, "Please tell me your username to start using my services:");
+            } else {
+                next();
+            }
+
+        },
+        
+        function (session, results, next){
+            if (results.response) {
+                session.conversationData["username"] = results.response;
+                session.send(`Hello ${results.response}!`); 
+            }
+           
             session.send("Below is a list of the current services that I can perform for you:\n 1. If you want to view your balance or funds, ***type show, display or view balance/funds*** \n 2. If you want to add a new payment card to your account ***type add (cardtype) to (accountype)*** \n 3. If you want to cancel an existing payment card ***type cancel (cardtype)*** \n 4. If you want to convert currency ***type convert currency or just convert*** \n 5. If you want to view the exchange rate ***type exchange rate*** \n 6. If you want to view the current stock market ***type stock or stock market*** \n 7. If you want to use Bravil bank's custom vision service to determine whether a link represents a coin or a particular type of note then just ***send me a link ('Make sure you use https')***")
         }
 
@@ -50,7 +64,7 @@ exports.startDialog = function (bot) {
             if (!isAttachment(session)) {
                 session.dialogData.args = args || {};        
                 if (!session.conversationData["username"]) { //Check if conversation has username
-                    builder.Prompts.text(session, "Please enter your ***username*** to confirm that you want to add a new payment card to your account.");                
+                    builder.Prompts.text(session, "Please enter your ***username*** to use my services");                
                 } else {
                     next(); // Skip if we already have this info.
                 }
@@ -86,32 +100,50 @@ exports.startDialog = function (bot) {
         function (session, args, next) {
             session.dialogData.args = args || {};
             if (!session.conversationData["username"]) {
-                session.send("Please note that once you have cancelled a payment card you ***cannot undo*** this action so be ***sure*** that this is your desired action")
-                builder.Prompts.text(session, "Please enter your ***username*** to confirm that you want to ***cancel*** this particular card");
+                builder.Prompts.text(session,"Please enter your ***username*** to use my services");
             } else {
                 next(); // Skip if we already have this info.
             }
         },
-        function (session, results,next) {
-        if (!isAttachment(session)) {    
+
+        function(session, next){
+            if (!session.conversationData["yes" || "no"]) {
+                builder.Prompts.confirm(session, "Are you sure you wish to cancel your card?");
+            } else {
+                next();
+            }
+        },
+
+        function (session, results, next) {
+            if (!isAttachment(session)) {    
+                if (results.response) {
+                    session.conversationData["yes"] = results.response;
+                    next();
+                } else {
+                    session.send("Card was not cancelled");
+                }
+            }
+        },
+
+        function (session, results, next){
             if (results.response) {
                 session.conversationData["username"] = results.response;
+  
             }
-
-            session.send("Cancelling card..");
-
             // Pulls out the Card entity from the session if it exists
             var cardEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'card');
 
             // Checks if the for entity was found
+            
             if (cardEntity) {
+                session.send("Cancelling card..");
                 session.send('Your ***\%s\*** has been succesfully ***canceled***.', cardEntity.entity);
                 bank.deleteCard(session,session.conversationData['username'],cardEntity.entity); 
             } else {
                 session.send("Oops looks like no such card exists on your account! Please make sure that you have typed in your card correctly!");
             }
         }
-    }]).triggerAction({
+    ]).triggerAction({
         matches: 'CancelCard'
     });
     

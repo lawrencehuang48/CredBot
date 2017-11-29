@@ -11,7 +11,7 @@ exports.getBalance = function getData(url, session, username, callback){
 };
 
 //Creating the REST call
-exports.addCardToAccount = function getData(url, username, cardtype, linkedto){ //Sending data to server via the parameters
+exports.addCardToAccount = function sendData(url, username, cardtype, linkedto){ //Sending data to server via the parameters
     var options = {
         url: url,
         method: 'POST',
@@ -56,6 +56,17 @@ exports.deleteCard = function deleteData(url,session, username , cardtype, id, c
         }
     })
 
+};
+
+exports.convertCurrency = function getData(url,session,callback){
+
+    request.get(url, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(body);
+        } else {
+            console.log(error)
+        }
+    });
 };
 
 
