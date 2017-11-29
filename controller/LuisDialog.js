@@ -53,7 +53,7 @@ exports.startDialog = function (bot) {
                 session.send(`Hello ${results.response}!`); 
             }
            
-            session.send("Below is a list of the current services that I can perform for you:\n 1. If you want to view your balance or funds, ***type show, display or view balance/funds*** \n 2. If you want to add a new payment card to your account ***type add (cardtype) to (accountype)*** \n 3. If you want to cancel an existing payment card ***type cancel (cardtype)*** \n 4. If you want to convert currency ***type convert currency or just convert*** \n 5. If you want to view the exchange rate ***type exchange rate*** \n 6. If you want to view the current stock market ***type stock or stock market*** \n 7. If you want to use Bravil bank's custom vision service to determine whether a link represents a coin or a particular type of note then just ***send me a link ('Make sure you use https')***")
+            session.send("Below is a list of the current services that I can perform for you:\n 1. If you want to view your balance or funds, ***type show, display or view balance/funds*** \n 2. If you want to add a new payment card to your account ***type add (cardtype) to (accountype)*** \n 3. If you want to cancel an existing payment card ***type cancel (cardtype)*** \n 4. If you want to view the exchange rate ***type show exchange rate*** \n 5. If you want to use Bravil bank's custom vision service to determine whether a link represents a coin or a particular type of note then just ***send me a link ('Make sure you use https')***")
         }
 
     ]).triggerAction({
@@ -161,7 +161,7 @@ exports.startDialog = function (bot) {
             // Checks if the rate entity was found
             
             if (rateEntity) {
-                session.send('Getting exchange rates for %s...', rateEntity.entity);
+                session.send('Getting exchange rates...', rateEntity.entity);
                 XRate.displayXRate(rateEntity.entity, session);
                 
             } else {

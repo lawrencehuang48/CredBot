@@ -10,13 +10,11 @@ function displayXRate(message,currencyType,session) {
     var container = [];
     var table = JSON.parse(message);
 
-    //for (var index in table) {
         var base = table.base;
         var date = table.date;
-        var test = Object.keys(table.rates);
-        var test2 = Object.values(table.rates);
-        container.push(base + "<br/>" + date + "<br/>" + test + "<br/>" + test2);
-    //}
+        var test = JSON.stringify(table.rates);
+        var con = test.split(',').join("<br/>");
+        container.push("base: " + base + "<br/>" + "date: " + date + "<br/>" + con);
 
     session.send(container);
 }
