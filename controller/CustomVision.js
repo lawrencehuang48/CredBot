@@ -7,7 +7,7 @@ exports.retreiveMessageHttps = function (session){
         json: true,
         headers: {
             'Content-Type': 'application/json',
-            'Prediction-Key': 'e255f72dcb9b4f69917f05309ab246d2'
+            'Prediction-Key': ''
         },
         body: { 'Url': session.message.text }
     }, function(error, response, body){
